@@ -1,0 +1,16 @@
+{
+  "registry_version":"1.0.0",
+  "policy":{"authority_order":["official-runtime-docs","first-party-conceptual","empirical-research","community","speculative"],"rule":"Current first-party runtime documentation supersedes stale adapter detail. Empirical claims must record mechanism class and limitations."},
+  "sources":[
+    {"id":"hermes-personality","class":"official-runtime-docs","mechanism":"runtime","url":"https://hermes-agent.nousresearch.com/docs/user-guide/features/personality/","checked_at":"2026-08-21"},
+    {"id":"hermes-soul-guide","class":"official-runtime-docs","mechanism":"runtime","url":"https://hermes-agent.nousresearch.com/docs/guides/use-soul-with-hermes","checked_at":"2026-08-21"},
+    {"id":"anthropic-teaching-why","class":"first-party-conceptual","mechanism":"training-time-character","url":"https://www.anthropic.com/research/teaching-claude-why","checked_at":"2026-08-21","limitation":"Training-time alignment result is not direct evidence about runtime Markdown SOUL prompting."},
+    {"id":"anthropic-assistant-axis","class":"first-party-conceptual","mechanism":"representation-analysis","url":"https://www.anthropic.com/research/assistant-axis","checked_at":"2026-08-21","limitation":"Activation-space findings are not equivalent to prompt-level control."},
+    {"id":"persona-system-prompts","class":"empirical-research","mechanism":"runtime-prompting","url":"https://aclanthology.org/2024.findings-emnlp.888/","checked_at":"2026-08-21"},
+    {"id":"personallm","class":"empirical-research","mechanism":"runtime-prompting","url":"https://aclanthology.org/2024.findings-naacl.229/","checked_at":"2026-08-21"},
+    {"id":"persona-effect","class":"empirical-research","mechanism":"personalization-role-prompting","url":"https://aclanthology.org/2024.acl-long.554/","checked_at":"2026-08-21"},
+    {"id":"persona-bias","class":"empirical-research","mechanism":"runtime-prompting","url":"https://aclanthology.org/2024.findings-acl.586/","checked_at":"2026-08-21"},
+    {"id":"truthfulness-personas","class":"empirical-research","mechanism":"representation-analysis","url":"https://aclanthology.org/2024.emnlp-main.364/","checked_at":"2026-08-21"},
+    {"id":"persona-vectors","class":"empirical-research","mechanism":"activation-steering","url":"https://arxiv.org/abs/2507.21509","checked_at":"2026-08-21"}
+  ]
+}
