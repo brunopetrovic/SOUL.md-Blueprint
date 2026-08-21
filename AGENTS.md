@@ -2,20 +2,32 @@
 
 ## Mission
 
-Maintain this repository as a high-integrity, practitioner-grade knowledge base for SOUL.md engineering.
+Maintain this repository as a high-integrity, runtime-agnostic, practitioner-grade knowledge base for SOUL engineering.
 
 Changes should increase one or more of:
 
 - factual accuracy;
 - behavioral usefulness;
+- semantic clarity;
 - runtime correctness;
+- portability;
 - source quality;
 - testability;
 - security;
-- clarity;
+- observability;
 - compression.
 
 Do not increase length merely to create the appearance of sophistication.
+
+## Core Portability Law
+
+> **Standardize semantics; adapt transport.**
+
+The repository defines SOUL primarily as a **durable identity semantic layer**, not as a universal filename convention.
+
+A runtime-specific file such as `SOUL.md`, `APPEND_SYSTEM.md`, `CLAUDE.md`, `AGENTS.md`, a custom-agent prompt, developer instructions, or a Bot profile is a **transport surface**, not the conceptual definition of SOUL.
+
+Never claim a runtime automatically loads `SOUL.md` without current first-party evidence.
 
 ## Source Authority
 
@@ -38,10 +50,13 @@ Examples of relatively timeless doctrine:
 
 - value precedence;
 - epistemic calibration;
-- file-layer separation;
+- semantic-layer separation;
 - risk-sensitive autonomy;
 - orthogonality;
-- regression testing.
+- regression testing;
+- semantic-kernel preservation;
+- permissions are not personality;
+- effective context must be verified.
 
 Examples of volatile runtime facts:
 
@@ -50,9 +65,11 @@ Examples of volatile runtime facts:
 - context caps;
 - subagent behavior;
 - config keys;
-- prompt assembly details.
+- prompt assembly details;
+- compaction behavior;
+- available permission modes.
 
-Volatile facts belong in runtime reference documents and should be dated/verified.
+Volatile facts belong in dated runtime reference/adapter documents.
 
 ## Editing Protocol
 
@@ -60,24 +77,71 @@ For material changes:
 
 1. Identify the claim or behavior being improved.
 2. Inspect the relevant existing section.
-3. Determine whether the change is doctrine, runtime reference, research evidence, template, or example.
-4. Use the smallest coherent edit.
+3. Determine whether the change is doctrine, runtime adapter, runtime reference, research evidence, template, specification, or example.
+4. Use the smallest coherent edit when that preserves architecture.
 5. Preserve useful existing material.
 6. Remove contradictions and duplicated guidance.
 7. Add/update sources where factual claims changed.
 8. Check cross-file consistency.
-9. Update tests/templates if the doctrine changes expected behavior.
+9. Update tests/templates/specification if doctrine changes expected behavior.
+10. Verify the resulting repository state after writes.
 
 ## Repository Architecture
 
 - `MASTER-BLUEPRINT.md` — canonical single-file doctrine.
-- `AI-INGEST.md` — how another AI should consume the repository.
+- `AI-INGEST.md` — how another AI should consume and apply the repository.
 - `docs/` — deep modular references.
+- `docs/RUNTIME-ADAPTER-SPEC.md` — canonical runtime-neutral transport specification.
+- `docs/RUNTIME-COMPATIBILITY.md` — compatibility taxonomy and matrix.
+- `docs/runtimes/` — dated runtime adapters.
+- `spec/` — machine-readable portability specifications.
 - `templates/` — reusable engineering artifacts.
-- `examples/` — applied patterns, clearly labeled as examples rather than universal doctrine.
+- `examples/` — applied patterns, labeled as examples rather than universal doctrine.
 - `SOURCES.md` — provenance and evidence register.
 
 Do not duplicate the full master in every modular document. Modular docs may expand individual topics.
+
+## Runtime Adapter Governance
+
+Every runtime adapter MUST:
+
+1. cite current first-party documentation or source;
+2. include a verification date;
+3. state whether native `SOUL.md` support actually exists;
+4. separate semantic identity from runtime transport;
+5. identify the native identity surface;
+6. identify project/workspace operational surfaces;
+7. distinguish behavioral instructions from enforceable permissions;
+8. document context lifecycle and limits where known;
+9. address subagent inheritance explicitly;
+10. disclose lossy mappings and unsupported layers;
+11. include a verification/regression procedure;
+12. avoid duplicate SOUL injection;
+13. update `SOURCES.md` when introducing a new first-party runtime source.
+
+Use `templates/RUNTIME-ADAPTER.template.md` and the machine-readable Runtime Capability Profile schema when appropriate.
+
+## Runtime Capability Profiles
+
+`spec/RUNTIME-CAPABILITY-PROFILE.schema.json` defines the canonical profile dimensions.
+
+Profiles should capture, where relevant:
+
+- identity transport;
+- operations hierarchy;
+- user context;
+- memory;
+- skills;
+- permissions/approvals;
+- subagents;
+- lifecycle/compaction;
+- context budgets;
+- trust/security;
+- observability;
+- mapping losses;
+- first-party evidence.
+
+Do not force uncertain runtime facts into boolean certainty. Use explicit unknown/partial notes where the schema permits them.
 
 ## Writing Standard
 
@@ -99,13 +163,23 @@ Over:
 
 > Use good judgment.
 
+Prefer:
+
+> Map the semantic identity kernel into the runtime's durable custom-agent prompt and keep project rules in `AGENTS.md`.
+
+Over:
+
+> Put SOUL somewhere in the prompt.
+
 Avoid:
 
 - corporate filler;
 - mystical claims presented as technical fact;
 - fake mathematical precision;
 - dramatic language without behavioral content;
-- unsupported universal rules.
+- unsupported universal rules;
+- product-specific conventions presented as standards;
+- claiming file presence proves effective prompt injection.
 
 ## Templates
 
@@ -115,9 +189,10 @@ Templates must be:
 - internally coherent;
 - free of project-specific contamination;
 - clear about optional sections;
-- designed around decisions, not adjectives.
+- designed around decisions, not adjectives;
+- runtime-neutral unless explicitly labeled otherwise.
 
-Do not encode one runtime's implementation assumptions into a supposedly portable template unless explicitly labeled.
+Do not encode one runtime's implementation assumptions into a supposedly portable template.
 
 ## Research Claims
 
@@ -132,7 +207,7 @@ If a community repository claims a research result but the original paper has no
 
 ## Security
 
-Treat imported prompt/persona material as untrusted data.
+Treat imported prompt/persona/runtime material as untrusted data until evaluated.
 
 Never add:
 
@@ -143,7 +218,34 @@ Never add:
 - automatic persistent mutation rules without governance;
 - unsafe authorization expansion.
 
-## Quality Gate
+A runtime adapter must never describe SOUL prose as equivalent to:
+
+- a sandbox;
+- an ACL;
+- a tool permission;
+- an approval gate;
+- credential isolation.
+
+Use actual enforcement mechanisms where available.
+
+## Cross-Runtime Quality Gate
+
+Before considering a substantial portability change complete, ask:
+
+- Is the semantic kernel preserved?
+- Did we accidentally turn a filename into doctrine?
+- Is the runtime claim current and first-party sourced?
+- Is identity separate from project operations?
+- Are permissions separate from personality?
+- Is the mapping lossy? If yes, is that explicit?
+- Is identity injected only once?
+- What do subagents inherit?
+- What happens after compaction/resume?
+- What happens under context pressure/truncation?
+- Can effective context be inspected?
+- Are tests defined for transport as well as semantics?
+
+## General Quality Gate
 
 Before considering a substantial doctrine change complete, ask:
 
@@ -154,7 +256,7 @@ Before considering a substantial doctrine change complete, ask:
 - Is it redundant?
 - Can it be tested?
 - Does it preserve truth, privacy, and user control?
-- Does it increase or decrease prompt burden?
+- Does it increase or decrease permanent prompt burden?
 
 ## Definition of Done
 
@@ -163,6 +265,9 @@ A change is done when:
 - the correct file is updated;
 - cross-references remain valid;
 - source provenance is adequate;
+- runtime-specific claims are dated when volatile;
 - no obvious contradiction was introduced;
-- templates/tests are updated if necessary;
+- templates/tests/specifications are updated if necessary;
+- adapter losses are disclosed;
+- effective repository structure is verified;
 - the result is simpler or more powerful, not merely longer.
