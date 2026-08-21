@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/brunopetrovic/SOUL.md-Blueprint/blob/main/spec/RUNTIME-CAPABILITY-PROFILE.schema.json",
+  "title": "SOUL Blueprint Runtime Capability Profile",
+  "description": "Machine-readable description of how an AI runtime can transport the SOUL Blueprint's canonical semantic layers. This schema describes runtime capabilities and adapter evidence; it does not certify product safety or model intelligence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "runtime",
+    "compatibility_level",
+    "native_soul",
+    "identity",
+    "operations",
+    "authority",
+    "lifecycle",
+    "sources"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "verified_at"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "vendor": {"type": ["string", "null"]},
+        "version": {"type": ["string", "null"]},
+        "status": {
+          "type": ["string", "null"],
+          "description": "Examples: stable, beta, developer-preview."
+        },
+        "verified_at": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "compatibility_level": {
+      "type": "string",
+      "enum": ["L0", "L1", "L2", "L3", "L4"]
+    },
+    "native_soul": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "filename_or_convention": {"type": ["string", "null"]},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "identity": {
+      "$ref": "#/$defs/surface"
+    },
+    "operations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "surfaces": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/surface"}
+        },
+        "hierarchical": {"type": ["boolean", "null"]},
+        "nested_discovery": {"type": ["boolean", "null"]},
+        "precedence_notes": {"type": ["string", "null"]}
+      }
+    },
+    "user_context": {
+      "$ref": "#/$defs/optionalCapability"
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supported": {"type": "boolean", "default": false},
+        "persistence": {"type": ["string", "null"]},
+        "retrieval": {"type": ["string", "null"]},
+        "writes": {"type": ["string", "null"]},
+        "write_approval": {"type": ["boolean", "null"]},
+        "limits": {"type": ["string", "null"]},
+        "inspection_or_deletion": {"type": ["string", "null"]}
+      }
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supported": {"type": "boolean", "default": false},
+        "mechanism": {"type": ["string", "null"]},
+        "lazy_or_on_demand": {"type": ["boolean", "null"]},
+        "permission_controls": {"type": ["string", "null"]}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enforceable_controls"],
+      "properties": {
+        "enforceable_controls": {"type": "boolean"},
+        "permission_model": {"type": ["string", "null"]},
+        "sandbox": {"type": ["string", "null"]},
+        "approval_model": {"type": ["string", "null"]},
+        "network_controls": {"type": ["string", "null"]},
+        "filesystem_controls": {"type": ["string", "null"]},
+        "managed_policy": {"type": ["string", "null"]}
+      }
+    },
+    "subagents": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supported": {"type": "boolean", "default": false},
+        "identity_inheritance": {"type": ["string", "null"]},
+        "operations_inheritance": {"type": ["string", "null"]},
+        "memory_inheritance": {"type": ["string", "null"]},
+        "skills_inheritance": {"type": ["string", "null"]},
+        "permission_inheritance": {"type": ["string", "null"]}
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["loading_model"],
+      "properties": {
+        "loading_model": {"type": "string", "minLength": 1},
+        "startup": {"type": ["string", "null"]},
+        "per_turn": {"type": ["string", "null"]},
+        "lazy_loading": {"type": ["string", "null"]},
+        "compaction": {"type": ["string", "null"]},
+        "resume": {"type": ["string", "null"]},
+        "reinjection": {"type": ["string", "null"]},
+        "cache_behavior": {"type": ["string", "null"]}
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "per_file": {"type": ["number", "string", "null"]},
+        "total": {"type": ["number", "string", "null"]},
+        "unit": {"type": ["string", "null"]},
+        "truncation": {"type": ["string", "null"]},
+        "priority_under_pressure": {"type": ["string", "null"]},
+        "dynamic": {"type": ["boolean", "null"]}
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "trust_model": {"type": ["string", "null"]},
+        "prompt_injection_scanning": {"type": ["string", "null"]},
+        "secret_handling": {"type": ["string", "null"]},
+        "untrusted_project_behavior": {"type": ["string", "null"]}
+      }
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "effective_context": {"type": ["string", "null"]},
+        "loaded_files": {"type": ["string", "null"]},
+        "trajectory_or_session_log": {"type": ["string", "null"]},
+        "tool_logs": {"type": ["string", "null"]},
+        "permission_decisions": {"type": ["string", "null"]}
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["string", "null"]
+      },
+      "description": "Canonical semantic layer to native runtime surface mapping. Recommended keys: SOUL, IDENTITY, USER, MEMORY, OPERATIONS, SKILLS, STYLE, EXAMPLES, TASK_CONTEXT, HARD_POLICY."
+    },
+    "lossy_mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["layer", "reason"],
+        "properties": {
+          "layer": {"type": "string"},
+          "reason": {"type": "string"},
+          "mitigation": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tests_run": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "known_failures": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url", "authority"],
+        "properties": {
+          "url": {"type": "string", "format": "uri"},
+          "authority": {
+            "type": "string",
+            "enum": ["official-docs", "official-source", "first-party-announcement", "empirical-research", "community", "other"]
+          },
+          "checked_at": {"type": ["string", "null"], "format": "date"},
+          "notes": {"type": ["string", "null"]}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supported", "type"],
+      "properties": {
+        "supported": {"type": "boolean"},
+        "type": {
+          "type": "string",
+          "enum": [
+            "native-soul",
+            "system-append",
+            "system-replace",
+            "developer-instructions",
+            "custom-agent",
+            "agent-profile",
+            "global-rules",
+            "project-rules",
+            "memory-profile",
+            "external-orchestration",
+            "manual",
+            "none",
+            "other"
+          ]
+        },
+        "path_or_config": {"type": ["string", "null"]},
+        "scope": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "precedence": {"type": ["string", "null"]},
+        "replace_or_append": {
+          "type": ["string", "null"],
+          "enum": ["replace", "append", "compose", "unknown", null]
+        },
+        "load_timing": {"type": ["string", "null"]},
+        "version_control_friendly": {"type": ["boolean", "null"]},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "optionalCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supported": {"type": "boolean", "default": false},
+        "mechanism": {"type": ["string", "null"]},
+        "scope": {"type": ["string", "null"]},
+        "notes": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
