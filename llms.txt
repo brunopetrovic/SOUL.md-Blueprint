@@ -1,0 +1,52 @@
+# SOUL.md Blueprint
+> Runtime-neutral specification and engineering discipline for durable AI-agent identity.
+
+Canonical doctrine:
+- /MASTER-BLUEPRINT.md
+
+AI procedure:
+- /AI-INGEST.md
+- /SKILL.md
+
+Architecture:
+- /docs/FOUNDATIONS.md
+- /docs/ARCHITECTURE.md
+- /docs/ENGINEERING-METHOD.md
+- /docs/AUTHORITY-MODEL.md
+- /docs/IDENTITY-LIFECYCLE.md
+- /docs/SUBAGENTS-DELEGATION.md
+- /docs/CONTEXT-ECONOMICS.md
+
+Evaluation:
+- /docs/EVALUATION.md
+- /evals/core/core-28.json
+- /spec/EVAL-CASE.schema.json
+- /spec/EVAL-RESULT.schema.json
+
+Semantic specs:
+- /spec/SOUL-IR.schema.json
+- /spec/SOUL-PACKAGE.schema.json
+- /spec/RUNTIME-CAPABILITY-PROFILE.schema.json
+
+Runtime deployment:
+- /docs/RUNTIME-ADAPTER-SPEC.md
+- /docs/RUNTIME-COMPATIBILITY.md
+- /docs/runtimes/
+- /runtime-profiles/
+
+Research/provenance:
+- /docs/RESEARCH.md
+- /docs/RESEARCH-2026-EXTENSIONS.md
+- /SOURCES.md
+- /sources/registry.json
+
+Reference tooling:
+- /tools/soul-lint/
+- /tools/soul-eval/
+
+Case studies:
+- /case-studies/
+
+Specification:
+- /VERSION
+- /CHANGELOG.md

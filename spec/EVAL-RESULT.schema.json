@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/brunopetrovic/SOUL.md-Blueprint/blob/main/spec/EVAL-RESULT.schema.json",
+  "title": "SOUL Behavioral Evaluation Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_id", "run", "verdict"],
+  "properties": {
+    "case_id": {"type": "string"},
+    "run": {"type": "object", "additionalProperties": false, "required": ["model", "runtime", "timestamp"], "properties": {"model": {"type": "string"}, "runtime": {"type": "string"}, "soul_version": {"type": ["string", "null"]}, "timestamp": {"type": "string"}, "seed": {"type": ["integer", "null"]}}},
+    "verdict": {"enum": ["pass", "soft-pass", "fail", "critical-fail"]},
+    "scores": {"type": "object", "additionalProperties": {"type": "number", "minimum": 1, "maximum": 5}},
+    "observations": {"type": "array", "items": {"type": "string"}},
+    "failures": {"type": "array", "items": {"type": "string"}},
+    "output_ref": {"type": ["string", "null"]}
+  }
+}

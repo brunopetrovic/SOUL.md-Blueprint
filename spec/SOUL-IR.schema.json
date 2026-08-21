@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/brunopetrovic/SOUL.md-Blueprint/blob/main/spec/SOUL-IR.schema.json",
+  "title": "SOUL Blueprint Intermediate Representation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "identity", "epistemics", "agency", "continuity"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "identity": {"$ref": "#/$defs/textBlock"},
+    "purpose": {"$ref": "#/$defs/optionalTextBlock"},
+    "relationship": {"$ref": "#/$defs/optionalTextBlock"},
+    "value_precedence": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "epistemics": {"$ref": "#/$defs/textBlock"},
+    "domain_principles": {"type": "array", "items": {"type": "string"}},
+    "ambiguity_policy": {"$ref": "#/$defs/optionalTextBlock"},
+    "disagreement_policy": {"$ref": "#/$defs/optionalTextBlock"},
+    "communication": {"$ref": "#/$defs/optionalTextBlock"},
+    "agency": {"$ref": "#/$defs/textBlock"},
+    "boundaries": {"type": "array", "items": {"type": "string"}},
+    "context_adaptation": {"type": "array", "items": {"type": "string"}},
+    "anti_patterns": {"type": "array", "items": {"type": "string"}},
+    "continuity": {"$ref": "#/$defs/textBlock"},
+    "identity_checksum": {"type": "array", "items": {"type": "string"}},
+    "provenance": {"type": "array", "items": {"$ref": "#/$defs/provenance"}}
+  },
+  "$defs": {
+    "textBlock": {"type": "object", "additionalProperties": false, "required": ["text"], "properties": {"text": {"type": "string", "minLength": 1}, "rationale": {"type": ["string", "null"]}}},
+    "optionalTextBlock": {"type": ["object", "null"], "additionalProperties": false, "properties": {"text": {"type": "string"}, "rationale": {"type": ["string", "null"]}}},
+    "provenance": {"type": "object", "additionalProperties": false, "required": ["source", "kind"], "properties": {"source": {"type": "string"}, "kind": {"enum": ["user", "first-party", "research", "runtime-docs", "community", "inference", "other"]}, "notes": {"type": ["string", "null"]}}}
+  }
+}

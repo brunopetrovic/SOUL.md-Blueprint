@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/brunopetrovic/SOUL.md-Blueprint/blob/main/spec/EVAL-CASE.schema.json",
+  "title": "SOUL Behavioral Evaluation Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "category", "prompt", "expected", "criticality"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9_.-]+$"},
+    "version": {"type": "string", "default": "1.0.0"},
+    "category": {"type": "string"},
+    "prompt": {"type": "string", "minLength": 1},
+    "setup": {"type": ["string", "null"]},
+    "expected": {"type": "object", "additionalProperties": false, "properties": {"must": {"type": "array", "items": {"type": "string"}}, "must_not": {"type": "array", "items": {"type": "string"}}, "notes": {"type": ["string", "null"]}}},
+    "dimensions": {"type": "array", "items": {"type": "string"}},
+    "criticality": {"enum": ["informational", "normal", "high", "critical"]},
+    "repetitions": {"type": "integer", "minimum": 1, "default": 1},
+    "languages": {"type": "array", "items": {"type": "string"}},
+    "tags": {"type": "array", "items": {"type": "string"}}
+  }
+}
