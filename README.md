@@ -21,6 +21,7 @@ The central idea is simple:
 - How to test for persona drift, sycophancy, overconfidence, brittleness, instruction conflict, unsafe autonomy, and context contamination.
 - How to version, review, compress, and govern identity files in production.
 - How to create domain-specific souls without contaminating them with procedures or temporary facts.
+- How to test identity across models, runtimes, truncation regimes, subagents, and prompt-precedence differences.
 
 ## Start here
 
@@ -39,6 +40,7 @@ If you are an AI agent consuming this repository, read:
 3. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 4. [`docs/ENGINEERING-METHOD.md`](docs/ENGINEERING-METHOD.md)
 5. [`docs/EVALUATION.md`](docs/EVALUATION.md)
+6. [`docs/PORTABILITY.md`](docs/PORTABILITY.md) when deploying across models/runtimes.
 
 Then use the templates and checklists appropriate to the task.
 
@@ -148,6 +150,7 @@ SOUL.md-Blueprint/
 │   ├── SECURITY-GOVERNANCE.md
 │   ├── EVALUATION.md
 │   ├── RESEARCH.md
+│   ├── PORTABILITY.md
 │   └── ANTI-PATTERNS.md
 ├── templates/
 │   ├── SOUL.template.md
