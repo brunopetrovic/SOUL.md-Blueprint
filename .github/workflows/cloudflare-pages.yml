@@ -53,7 +53,7 @@ jobs:
 
       - name: Install website dependencies
         working-directory: apps/website
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build website
         working-directory: apps/website

@@ -35,14 +35,14 @@ The repository has two Node-based applications and Python reference tooling. Ins
 
 ```bash
 cd apps/website
-npm install --no-audit --no-fund
+npm ci --no-audit --no-fund
 ```
 
 ### Agent API
 
 ```bash
 cd apps/agent-api
-npm install --no-audit --no-fund
+npm ci --no-audit --no-fund
 ```
 
 Python tooling under `tools/` is intentionally dependency-light; use Python 3.12+ unless a tool states otherwise.
