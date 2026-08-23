@@ -1,60 +1,295 @@
 name: Blueprint conformance
+
 on:
   push:
     branches: [main]
   pull_request:
+
 permissions:
   contents: read
+
 jobs:
   conformance:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
-        with: { python-version: '3.12' }
+        with:
+          python-version: '3.12'
+
       - uses: actions/setup-node@v4
-        with: { node-version: '22' }
-      - name: Validate JSON and case-study pairs
+        with:
+          node-version: '22'
+
+      - name: Validate repository corpus
         run: |
           python - <<'PY'
-          import json, pathlib, sys
-          root=pathlib.Path('.')
+          import json
+          import pathlib
+          import sys
+
+          root = pathlib.Path('.')
           for p in root.rglob('*.json'):
-              if any(x in p.parts for x in ('node_modules','dist','.astro')): continue
-              try: json.loads(p.read_text())
-              except Exception as e: print('invalid json',p,e); sys.exit(1)
-          cases=root/'case-studies'
+              if any(x in p.parts for x in ('node_modules', 'dist', '.astro')):
+                  continue
+              try:
+                  json.loads(p.read_text())
+              except Exception as exc:
+                  print('invalid json', p, exc)
+                  sys.exit(1)
+
+          cases = root / 'case-studies'
           for d in cases.iterdir():
-              if d.is_dir() and not ((d/'SOUL.md').exists() and (d/'AGENTS.md').exists()):
-                  print('missing pair',d); sys.exit(1)
-          profiles=[p for p in (root/'runtime-profiles').glob('*.json')]
-          assert len(profiles)>=8, f'expected >=8 runtime profiles, got {len(profiles)}'
-          suite=json.loads((root/'evals/core/core-28.json').read_text())
-          assert len(suite['cases'])==28, 'Core-28 must contain 28 cases'
-          print('JSON/corpus conformance OK')
+              if d.is_dir() and not ((d / 'SOUL.md').exists() and (d / 'AGENTS.md').exists()):
+                  print('missing SOUL/AGENTS pair', d)
+                  sys.exit(1)
+
+          profiles = list((root / 'runtime-profiles').glob('*.json'))
+          assert len(profiles) >= 8, f'expected >=8 runtime profiles, got {len(profiles)}'
+
+          suite = json.loads((root / 'evals/core/core-28.json').read_text())
+          assert len(suite['cases']) == 28, 'Core-28 must contain 28 cases'
+
+          agents = (root / 'AGENTS.md').read_text()
+          for heading in ('## Installation', '## Configuration', '## Usage'):
+              assert heading in agents, f'AGENTS.md missing {heading}'
+
+          skill = (root / 'SKILL.md').read_text()
+          assert skill.startswith('---\n'), 'SKILL.md must start with YAML frontmatter'
+          assert '\nname: soul-engineering\n' in skill
+          assert '\ndescription:' in skill
+
+          print('Repository corpus conformance OK')
           PY
+
       - name: Website install
         working-directory: apps/website
         run: npm install --no-audit --no-fund
+
+      - name: Website typecheck
+        working-directory: apps/website
+        run: npm run check
+
       - name: Website build
         working-directory: apps/website
         env:
           PUBLIC_SITE_URL: https://example.invalid
         run: npm run build
+
       - name: Agent API install
         working-directory: apps/agent-api
         run: npm install --no-audit --no-fund
+
       - name: Agent API typecheck
         working-directory: apps/agent-api
         run: npm run check
-      - name: Static output assertions
+
+      - name: Validate agent-readable static output
         run: |
-          test -f apps/website/dist/index.html
-          test -f apps/website/dist/llms.txt
-          test -f apps/website/dist/llms-full.txt
-          test -f apps/website/dist/agents.json
-          test -f apps/website/dist/.well-known/agent-permissions.json
-          test -f apps/website/dist/sitemap.xml
-          grep -q '<main' apps/website/dist/blueprint/index.html
-          grep -q 'rel="alternate"' apps/website/dist/blueprint/index.html
-          grep -q 'application/ld+json' apps/website/dist/blueprint/index.html
+          python - <<'PY'
+          import hashlib
+          import json
+          import pathlib
+          import re
+          import xml.etree.ElementTree as ET
+
+          dist = pathlib.Path('apps/website/dist')
+
+          def require(rel):
+              p = dist / rel
+              if p.exists():
+                  return p
+              alt = p / 'index.html'
+              if alt.exists():
+                  return alt
+              raise AssertionError(f'missing built artifact: {rel}')
+
+          for rel in [
+              'index.html',
+              'blueprint/index.html',
+              'glossary/index.html',
+              'llms.txt',
+              'llms-full.txt',
+              'sitemap.xml',
+              'sitemap.md',
+              'AGENTS.md',
+              'agents.txt',
+              'agents.json',
+              'openapi.json',
+              'api/v1/catalog.json',
+              'api/v1/runtime/hermes.json',
+              'api/v1/case-study/developer.json',
+              '.well-known/agent-permissions.json',
+              '.well-known/api-catalog',
+              '.well-known/agent-skills/index.json',
+              '.well-known/agent-skills/soul-engineering/SKILL.md',
+              '_worker.js'
+          ]:
+              require(rel)
+
+          html = require('blueprint/index.html').read_text()
+          for needle in [
+              '<main',
+              'rel="canonical"',
+              'rel="alternate"',
+              'type="text/markdown"',
+              'rel="describedby"',
+              'href="/llms.txt"',
+              'rel="service-desc"',
+              'href="/openapi.json"',
+              'rel="api-catalog"',
+              'href="/.well-known/api-catalog"',
+              'rel="agent-skills"',
+              'href="/.well-known/agent-skills/index.json"',
+              'application/ld+json',
+              'href="/glossary"'
+          ]:
+              assert needle in html, f'blueprint HTML missing {needle}'
+
+          llms = require('llms.txt').read_text()
+          assert llms.startswith('# SOUL.md Blueprint\n')
+          assert '\n> Runtime-neutral' in llms
+          for needle in ['/sitemap.md', '/AGENTS.md', '/openapi.json', '/.well-known/api-catalog', '/.well-known/agent-skills/index.json']:
+              assert needle in llms, f'llms.txt missing {needle}'
+
+          sitemap_md = require('sitemap.md').read_text()
+          assert sitemap_md.startswith('# SOUL.md Blueprint Sitemap\n')
+          assert len(re.findall(r'^## ', sitemap_md, flags=re.M)) >= 5
+          assert len(re.findall(r'\[[^\]]+\]\([^\)]+\)', sitemap_md)) >= 20
+
+          agents_md = require('AGENTS.md').read_text()
+          for heading in ('## Installation', '## Configuration', '## Usage'):
+              assert heading in agents_md
+
+          page_mirrors = [
+              require('index.md'),
+              require('blueprint.md'),
+              require('architecture.md'),
+              require('glossary.md'),
+              require('runtimes/hermes.md'),
+              require('case-studies/developer.md'),
+              require('repository.md')
+          ]
+          for p in page_mirrors:
+              text = p.read_text()
+              assert text.startswith('---\n'), f'{p} missing YAML frontmatter'
+              frontmatter = text.split('\n---\n', 1)[0]
+              for key in ('title:', 'description:', 'canonical:', 'source:', 'last_updated:', 'representation:'):
+                  assert key in frontmatter, f'{p} missing frontmatter {key}'
+              assert '\n## Sitemap\n' in text, f'{p} missing agent navigation Sitemap section'
+
+              in_fence = False
+              for line in text.splitlines():
+                  if line.startswith('```'):
+                      if not in_fence:
+                          assert line.strip() != '```', f'{p} has an opening code fence without a language tag'
+                      in_fence = not in_fence
+              assert not in_fence, f'{p} has an unclosed code fence'
+
+          sitemap = require('sitemap.xml').read_text()
+          root = ET.fromstring(sitemap)
+          ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          urls = root.findall('s:url', ns)
+          assert len(urls) >= 40, f'expected broad sitemap coverage, got {len(urls)}'
+          for entry in urls:
+              loc = entry.findtext('s:loc', namespaces=ns)
+              lastmod = entry.findtext('s:lastmod', namespaces=ns)
+              assert loc and loc.startswith('https://example.invalid')
+              assert lastmod and re.fullmatch(r'\d{4}-\d{2}-\d{2}', lastmod), (loc, lastmod)
+
+          openapi = json.loads(require('openapi.json').read_text())
+          assert openapi['openapi'].startswith('3.1')
+          assert openapi['info']['title']
+          operation_ids = set()
+          for path_item in openapi['paths'].values():
+              for method, operation in path_item.items():
+                  if method.lower() in {'get','post','put','patch','delete','options','head','trace'}:
+                      operation_ids.add(operation['operationId'])
+          assert {'getCatalog', 'getRuntimeProfile', 'getCaseStudy'} <= operation_ids
+
+          agents = json.loads(require('agents.json').read_text())
+          assert agents['agentsJson'] == '0.1.0'
+          assert {'info','sources','flows'} <= agents.keys()
+          assert agents['sources'][0]['path'].endswith('/openapi.json')
+          for flow in agents['flows']:
+              for action in flow['actions']:
+                  assert action['operationId'] in operation_ids
+
+          permissions = json.loads(require('.well-known/agent-permissions.json').read_text())
+          assert permissions['metadata']['schema_version'] == '1.0.0'
+          assert permissions['metadata']['last_updated']
+          assert permissions['strict'] is True
+          assert permissions['resource_rules']
+          assert permissions['api'][0]['type'] == 'openapi'
+          assert permissions['api'][0]['endpoint'].endswith('/openapi.json')
+
+          catalog = json.loads(require('.well-known/api-catalog').read_text())
+          assert isinstance(catalog.get('linkset'), list) and len(catalog['linkset']) >= 2
+          service_descs = [
+              item
+              for linkset in catalog['linkset']
+              for item in linkset.get('service-desc', [])
+          ]
+          assert any(item.get('href', '').endswith('/openapi.json') for item in service_descs)
+
+          skills = json.loads(require('.well-known/agent-skills/index.json').read_text())
+          assert skills['$schema'] == 'https://schemas.agentskills.io/discovery/0.2.0/schema.json'
+          assert len(skills['skills']) == 1
+          skill_meta = skills['skills'][0]
+          assert skill_meta['name'] == 'soul-engineering'
+          assert skill_meta['type'] == 'skill-md'
+          skill_bytes = require('.well-known/agent-skills/soul-engineering/SKILL.md').read_bytes()
+          digest = 'sha256:' + hashlib.sha256(skill_bytes).hexdigest()
+          assert skill_meta['digest'] == digest, (skill_meta['digest'], digest)
+
+          print('Agent-readable static output conformance OK')
+          PY
+
+      - name: Validate Cloudflare Markdown negotiation worker
+        run: |
+          cp apps/website/dist/_worker.js /tmp/worker.mjs
+          node --input-type=module <<'NODE'
+          import worker from 'file:///tmp/worker.mjs';
+
+          const assets = new Map([
+            ['/blueprint', new Response('<html><body><main>HTML</main></body></html>', {headers:{'Content-Type':'text/html; charset=utf-8'}})],
+            ['/blueprint.md', new Response('---\ntitle: "Blueprint"\n---\n\n# Blueprint\n\n## Sitemap\n', {headers:{'Content-Type':'text/plain'}})],
+            ['/.well-known/api-catalog', new Response('{"linkset":[]}', {headers:{'Content-Type':'application/octet-stream'}})],
+            ['/.well-known/agent-skills/index.json', new Response('{"skills":[]}', {headers:{'Content-Type':'application/octet-stream'}})]
+          ]);
+
+          const env = {
+            ASSETS: {
+              async fetch(request) {
+                const path = new URL(request.url).pathname;
+                return assets.get(path) || new Response('not found', {status:404});
+              }
+            }
+          };
+
+          let response = await worker.fetch(new Request('https://example.invalid/blueprint', {headers:{Accept:'text/markdown'}}), env);
+          if (!response.ok) throw new Error('negotiated Markdown failed');
+          if (!response.headers.get('content-type')?.startsWith('text/markdown')) throw new Error('wrong negotiated content type');
+          if (response.headers.get('content-location') !== '/blueprint.md') throw new Error('missing Content-Location');
+          if (!response.headers.get('vary')?.includes('Accept')) throw new Error('missing Vary: Accept');
+          const mdLinks = response.headers.get('link') || '';
+          for (const rel of ['describedby', 'service-desc', 'api-catalog', 'agent-skills']) {
+            if (!mdLinks.includes(`rel="${rel}"`)) throw new Error(`Markdown Link header missing ${rel}`);
+          }
+
+          response = await worker.fetch(new Request('https://example.invalid/blueprint', {headers:{Accept:'text/html'}}), env);
+          const htmlLinks = response.headers.get('link') || '';
+          if (!htmlLinks.includes('rel="alternate"')) throw new Error('HTML Link header missing Markdown alternate');
+          if (!htmlLinks.includes('type="text/markdown"')) throw new Error('HTML alternate missing Markdown type');
+
+          response = await worker.fetch(new Request('https://example.invalid/.well-known/api-catalog'), env);
+          if (!response.headers.get('content-type')?.startsWith('application/linkset+json')) throw new Error('API catalog MIME not enforced');
+          if (response.headers.get('access-control-allow-origin') !== '*') throw new Error('API catalog CORS missing');
+
+          response = await worker.fetch(new Request('https://example.invalid/.well-known/agent-skills/index.json'), env);
+          if (!response.headers.get('content-type')?.startsWith('application/json')) throw new Error('skills MIME not enforced');
+          if (response.headers.get('access-control-allow-origin') !== '*') throw new Error('skills CORS missing');
+
+          console.log('Cloudflare representation negotiation conformance OK');
+          NODE
