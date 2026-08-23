@@ -1,2 +1,38 @@
-import type { APIRoute } from 'astro'; import {repoVersion} from '../lib/content';
-export const GET: APIRoute=({site})=>{const b=(site||new URL('https://soul-md-blueprint.pages.dev')).toString().replace(/\/$/,'');const body={schema_version:'1.0',name:'SOUL.md Blueprint',version:repoVersion(),kind:'knowledge-standard',description:'Runtime-neutral specification and engineering discipline for durable AI-agent identity.',canonical_repository:'https://github.com/brunopetrovic/SOUL.md-Blueprint',discovery:{llms:`${b}/llms.txt`,full_corpus:`${b}/llms-full.txt`,sitemap:`${b}/sitemap.xml`,markdown_alternates:true},interfaces:{website:b,mcp:{status:'source-available-not-assumed-deployed',source:'apps/agent-api'},a2a:{status:'source-available-not-assumed-deployed',source:'apps/agent-api'}},permissions:`${b}/.well-known/agent-permissions.json`};return new Response(JSON.stringify(body,null,2),{headers:{'Content-Type':'application/json; charset=utf-8'}})};
+import type { APIRoute } from 'astro';
+import { repoVersion } from '../lib/content';
+
+export const GET: APIRoute = ({ site }) => {
+  const base = (site || new URL('https://soul-md-blueprint.pages.dev')).toString().replace(/\/$/, '');
+  const body = {
+    agentsJson: '0.1.0',
+    info: {
+      title: 'SOUL.md Blueprint Agent API',
+      version: repoVersion(),
+      description: 'Read-only structured discovery for the SOUL.md Blueprint over its published OpenAPI contract.'
+    },
+    sources: [{
+      id: 'blueprint-api',
+      path: `${base}/openapi.json`
+    }],
+    flows: [{
+      id: 'browse_blueprint_flow',
+      title: 'Browse SOUL.md Blueprint',
+      description: 'Discover canonical documentation, runtime profiles, case studies, and agent-readable interfaces.',
+      actions: [{
+        id: 'catalog_action',
+        sourceId: 'blueprint-api',
+        operationId: 'getCatalog'
+      }],
+      links: [],
+      fields: {
+        parameters: [],
+        responses: {
+          success: { type: 'object' }
+        }
+      }
+    }]
+  };
+  return new Response(JSON.stringify(body, null, 2), {
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=3600' }
+  });
+};
