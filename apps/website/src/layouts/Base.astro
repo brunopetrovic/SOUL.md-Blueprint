@@ -40,7 +40,9 @@ const schema = jsonLd || {
   <link rel="canonical" href={canonical} />
   <link rel="describedby" href="/llms.txt" />
   <link rel="agent-permissions" href="/.well-known/agent-permissions.json" type="application/json" />
-  <link rel="service-desc" href="/openapi.json" type="application/vnd.oai.openapi+json" />
+  <link rel="service-desc" href="/openapi.json" type="application/openapi+json;version=3.1" />
+  <link rel="api-catalog" href="/.well-known/api-catalog" type="application/linkset+json" />
+  <link rel="agent-skills" href="/.well-known/agent-skills/index.json" type="application/json" />
   {mdAlt && <link rel="alternate" type="text/markdown" href={mdAlt} />}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>{title}</title>
@@ -73,7 +75,7 @@ const schema = jsonLd || {
 
   <footer class="shell site-footer">
     <span>SOUL.md Blueprint · runtime-neutral agent identity engineering</span>
-    <div class="footer-links"><a href="/glossary">Glossary</a><a href="/sitemap.md">Sitemap</a><a href="/AGENTS.md">AGENTS.md</a><a href="/llms.txt">llms.txt</a><a href="/openapi.json">OpenAPI</a><a href={REPO_URL}>GitHub</a></div>
+    <div class="footer-links"><a href="/glossary">Glossary</a><a href="/sitemap.md">Sitemap</a><a href="/AGENTS.md">AGENTS.md</a><a href="/llms.txt">llms.txt</a><a href="/.well-known/agent-skills/index.json">Skills</a><a href="/openapi.json">OpenAPI</a><a href={REPO_URL}>GitHub</a></div>
   </footer>
 
   <aside class="drawer" id="mobile-drawer" aria-hidden="true" inert>
