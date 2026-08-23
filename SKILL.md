@@ -1,3 +1,8 @@
+---
+name: soul-engineering
+description: Create, audit, refactor, compile, test, and govern durable AI-agent identity systems using the SOUL.md Blueprint.
+---
+
 # SOUL Engineering Skill
 
 ## Purpose
