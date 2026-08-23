@@ -39,6 +39,8 @@ const schema = jsonLd || {
   <meta name="twitter:description" content={description} />
   <link rel="canonical" href={canonical} />
   <link rel="describedby" href="/llms.txt" />
+  <link rel="agent-permissions" href="/.well-known/agent-permissions.json" type="application/json" />
+  <link rel="service-desc" href="/openapi.json" type="application/vnd.oai.openapi+json" />
   {mdAlt && <link rel="alternate" type="text/markdown" href={mdAlt} />}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>{title}</title>
@@ -71,14 +73,14 @@ const schema = jsonLd || {
 
   <footer class="shell site-footer">
     <span>SOUL.md Blueprint · runtime-neutral agent identity engineering</span>
-    <div class="footer-links"><a href="/llms.txt">llms.txt</a><a href="/agents.json">agents.json</a><a href={REPO_URL}>GitHub</a></div>
+    <div class="footer-links"><a href="/glossary">Glossary</a><a href="/sitemap.md">Sitemap</a><a href="/AGENTS.md">AGENTS.md</a><a href="/llms.txt">llms.txt</a><a href="/openapi.json">OpenAPI</a><a href={REPO_URL}>GitHub</a></div>
   </footer>
 
   <aside class="drawer" id="mobile-drawer" aria-hidden="true" inert>
     <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Navigation">
       <div class="drawer-top"><span class="brand"><span class="brand-mark"></span>SOUL.MD</span><button class="icon-button" id="menu-close" aria-label="Close menu">×</button></div>
       <div class="drawer-links">
-        <a href="/blueprint">Blueprint</a><a href="/architecture">Architecture</a><a href="/engineering">Engineering</a><a href="/runtimes">Runtimes</a><a href="/evaluation">Evaluation</a><a href="/spec">Specification</a><a href="/tooling">Tooling</a><a href="/case-studies">Case studies</a><a href="/research">Research</a><a href="/sources">Sources</a><a href="/governance">Governance</a><a href="/repository">Repository</a>
+        <a href="/blueprint">Blueprint</a><a href="/architecture">Architecture</a><a href="/engineering">Engineering</a><a href="/runtimes">Runtimes</a><a href="/evaluation">Evaluation</a><a href="/spec">Specification</a><a href="/tooling">Tooling</a><a href="/case-studies">Case studies</a><a href="/research">Research</a><a href="/sources">Sources</a><a href="/glossary">Glossary</a><a href="/governance">Governance</a><a href="/repository">Repository</a>
       </div>
     </div>
   </aside>
