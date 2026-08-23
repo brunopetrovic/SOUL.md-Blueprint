@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro'; import {readRepo,sourceUrl} from '../lib/content';
+const files=['SOUL-IR.schema.json','SOUL-PACKAGE.schema.json','EVAL-CASE.schema.json','EVAL-RESULT.schema.json','RUNTIME-CAPABILITY-PROFILE.schema.json']; const schemas=files.map(file=>({file,data:JSON.parse(readRepo(`spec/${file}`))}));
+---
+<Base title="Specification · SOUL.md Blueprint" description="Machine-readable JSON Schemas for canonical SOUL semantics, packages, evaluations and runtime capability profiles.">
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Machine-readable semantics</p><h1>Specification</h1><p class="hero-copy">The human doctrine has explicit machine interfaces for representation, packaging, evaluation and runtime profiling.</p></div></section>
+<section class="shell" style="padding-bottom:120px">{schemas.map(s=><details class="data-panel"><summary><strong>{s.file}</strong> — {s.data.title}</summary><p><a class="button" href={sourceUrl(`spec/${s.file}`)}>View source ↗</a></p><pre><code>{JSON.stringify(s.data,null,2)}</code></pre></details>)}</section>
+</Base>

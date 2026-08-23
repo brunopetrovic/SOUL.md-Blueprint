@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import { caseStudySlugs,titleize } from '../../lib/content';
+---
+<Base title="Case Studies · SOUL.md Blueprint" description="Twenty-two paired SOUL.md and AGENTS.md reference architectures across business, technical, creative and personal-support domains." markdownPath="/case-studies.md">
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Applied identity engineering</p><h1>22 domain case studies</h1><p class="hero-copy">Each pair demonstrates the core separation: SOUL governs durable identity and judgment; AGENTS governs workspace execution, systems, files, workflows and mutable procedures.</p></div></section>
+<section class="section shell"><div class="card-grid">{caseStudySlugs.map((slug,i)=><a class="card" href={`/case-studies/${slug}`}><span class="cap-number">{String(i+1).padStart(2,'0')} / CASE</span><h3>{titleize(slug)}</h3><p>Compare durable identity constitution with operational execution doctrine.</p></a>)}</div></section>
+</Base>

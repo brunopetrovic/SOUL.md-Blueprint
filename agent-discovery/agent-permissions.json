@@ -1,0 +1,9 @@
+{
+  "schema_version": "0.1-experimental",
+  "status": "advisory-not-security-enforcement",
+  "policy": {
+    "read": {"content":"allow","metadata":"allow","links":"allow","search":"allow"},
+    "interaction": {"scroll":"allow","copy":"allow","navigate":"allow","search_input":"allow"},
+    "side_effects": {"authentication":"deny","account_changes":"deny","uploads":"deny","publishing":"deny","financial":"deny","destructive":"deny","external_messages":"deny"}
+  }
+}

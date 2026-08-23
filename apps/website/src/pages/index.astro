@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import OrbitPanel from '../components/OrbitPanel.astro';
+import { repoVersion, runtimeSlugs, caseStudySlugs, titleize } from '../lib/content';
+const version=repoVersion();
+const jsonLd={
+  '@context':'https://schema.org','@graph':[
+    {'@type':'WebSite','@id':`${Astro.site}#website`,name:'SOUL.md Blueprint',url:Astro.site?.toString(),description:'Runtime-neutral specification and engineering discipline for durable AI-agent identity.'},
+    {'@type':'SoftwareSourceCode',name:'SOUL.md Blueprint',codeRepository:'https://github.com/brunopetrovic/SOUL.md-Blueprint',programmingLanguage:['Markdown','JSON Schema','Python','TypeScript'],version}
+  ]
+};
+---
+<Base title="SOUL.md Blueprint — Engineer durable AI identity" description="Runtime-neutral specification, engineering discipline, reference implementation, and evaluation system for durable AI-agent identity." canonicalPath="/" markdownPath="/index.md" jsonLd={jsonLd}>
+  <section class="hero shell">
+    <div>
+      <p class="eyebrow">Runtime-neutral identity engineering standard</p>
+      <h1>Engineer durable <em>AI identity.</em></h1>
+      <p class="hero-copy">SOUL.md Blueprint separates durable identity from operations, memory, skills, permissions and transient context—then compiles those semantics into the native surfaces of each agent runtime.</p>
+      <div class="hero-buttons"><a class="button primary" href="/blueprint">Read the Blueprint →</a><a class="button" href="/architecture">Explore the architecture ↓</a></div>
+      <div class="hero-meta"><div><strong>v{version}</strong><span>Standard</span></div><div><strong>{caseStudySlugs.length}</strong><span>Case studies</span></div><div><strong>{runtimeSlugs.length}</strong><span>Runtime profiles</span></div><div><strong>Core-28</strong><span>Regression suite</span></div></div>
+    </div>
+    <OrbitPanel />
+  </section>
+
+  <section class="section shell">
+    <div class="section-heading"><h2>Standardize semantics. Adapt transport.</h2><p>A filename is not the architecture. Canonical identity stays upstream; runtime-specific files are projections. This lets one identity survive Hermes, OpenClaw, Pi, OpenCode, Claude Code, Codex, DeepSeek Harness, Grok Bot, and future harnesses without maintaining divergent personalities.</p></div>
+    <div class="capability-grid">
+      <article class="capability"><span class="cap-number">01 / IDENTITY</span><h3>Durable semantic kernel</h3><p>Identity, value precedence, epistemics, judgment, disagreement, agency posture, boundaries and continuity.</p></article>
+      <article class="capability"><span class="cap-number">02 / TRANSPORT</span><h3>Runtime capability profile</h3><p>Map semantics into native prompts, rules, skills, memory surfaces, subagents and permission systems without pretending unsupported features exist.</p></article>
+      <article class="capability"><span class="cap-number">03 / EVIDENCE</span><h3>Behavioral verification</h3><p>Core-28 regression cases, repeated-run scoring, linting, lifecycle tests and source provenance turn identity work into engineering rather than vibes.</p></article>
+    </div>
+  </section>
+
+  <div class="network-strip"><div class="ticker"><span><b>●</b> TRUTH OVER PERSONA</span><span>SOUL ≠ AGENTS ≠ MEMORY</span><span><b>●</b> BOLDNESS ∝ REVERSIBILITY</span><span>CAUTION ∝ BLAST RADIUS</span><span><b>●</b> SEMANTICS → ADAPTER → RUNTIME</span><span>TEST WORST CASES</span><span><b>●</b> TRUTH OVER PERSONA</span></div></div>
+
+  <section class="section shell">
+    <div class="section-heading"><h2>Eight runtime projections. One canonical identity.</h2><p>Runtime profiles are dated capability snapshots. They describe identity injection, project rules, memory, permissions, subagents, compaction and known lossy mappings.</p></div>
+    <div class="card-grid">{runtimeSlugs.map((slug,i)=><a class="card" href={`/runtimes/${slug}`}><span class="cap-number">{String(i+1).padStart(2,'0')} / RUNTIME</span><h3>{titleize(slug)}</h3><p>Inspect the machine-readable capability profile and native SOUL transport mapping.</p></a>)}</div>
+  </section>
+
+  <section class="section shell">
+    <div class="section-heading"><h2>Identity becomes concrete through case studies.</h2><p>Twenty-two paired SOUL.md + AGENTS.md examples demonstrate the separation between durable judgment and changing workspace operations across radically different domains.</p></div>
+    <div class="card-grid">{caseStudySlugs.slice(0,6).map((slug,i)=><a class="card" href={`/case-studies/${slug}`}><span class="cap-number">{String(i+1).padStart(2,'0')} / CASE</span><h3>{titleize(slug)}</h3><p>Study the identity constitution beside its operational execution layer.</p></a>)}</div>
+  </section>
+
+  <section class="cta shell"><div class="cta-box"><p class="eyebrow">AI-native by construction</p><h2>Give the repository to an agent. It learns how to engineer identity correctly.</h2><p>`AI-INGEST.md`, `SKILL.md`, schemas, runtime profiles, Markdown mirrors, llms discovery, structured metadata and protocol surfaces make the same knowledge navigable by humans and machines.</p><div class="hero-buttons" style="justify-content:center"><a class="button primary" href="/repository">Explore the repository →</a><a class="button" href="/llms.txt">Open llms.txt ↗</a></div></div></section>
+</Base>

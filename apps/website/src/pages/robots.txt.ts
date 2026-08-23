@@ -1,0 +1,2 @@
+import type { APIRoute } from 'astro';
+export const GET: APIRoute=({site})=>{const base=(site||new URL('https://soul-md-blueprint.pages.dev')).toString().replace(/\/$/,'');return new Response(`User-agent: *\nAllow: /\nAllow: /llms.txt\nAllow: /llms-full.txt\nAllow: /agents.txt\nAllow: /agents.json\nAllow: /.well-known/\nSitemap: ${base}/sitemap.xml\n`,{headers:{'Content-Type':'text/plain; charset=utf-8'}})};

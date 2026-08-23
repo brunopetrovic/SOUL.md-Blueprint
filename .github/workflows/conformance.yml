@@ -1,0 +1,60 @@
+name: Blueprint conformance
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Validate JSON and case-study pairs
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          root=pathlib.Path('.')
+          for p in root.rglob('*.json'):
+              if any(x in p.parts for x in ('node_modules','dist','.astro')): continue
+              try: json.loads(p.read_text())
+              except Exception as e: print('invalid json',p,e); sys.exit(1)
+          cases=root/'case-studies'
+          for d in cases.iterdir():
+              if d.is_dir() and not ((d/'SOUL.md').exists() and (d/'AGENTS.md').exists()):
+                  print('missing pair',d); sys.exit(1)
+          profiles=[p for p in (root/'runtime-profiles').glob('*.json')]
+          assert len(profiles)>=8, f'expected >=8 runtime profiles, got {len(profiles)}'
+          suite=json.loads((root/'evals/core/core-28.json').read_text())
+          assert len(suite['cases'])==28, 'Core-28 must contain 28 cases'
+          print('JSON/corpus conformance OK')
+          PY
+      - name: Website install
+        working-directory: apps/website
+        run: npm install --no-audit --no-fund
+      - name: Website build
+        working-directory: apps/website
+        env:
+          PUBLIC_SITE_URL: https://example.invalid
+        run: npm run build
+      - name: Agent API install
+        working-directory: apps/agent-api
+        run: npm install --no-audit --no-fund
+      - name: Agent API typecheck
+        working-directory: apps/agent-api
+        run: npm run check
+      - name: Static output assertions
+        run: |
+          test -f apps/website/dist/index.html
+          test -f apps/website/dist/llms.txt
+          test -f apps/website/dist/llms-full.txt
+          test -f apps/website/dist/agents.json
+          test -f apps/website/dist/.well-known/agent-permissions.json
+          test -f apps/website/dist/sitemap.xml
+          grep -q '<main' apps/website/dist/blueprint/index.html
+          grep -q 'rel="alternate"' apps/website/dist/blueprint/index.html
+          grep -q 'application/ld+json' apps/website/dist/blueprint/index.html

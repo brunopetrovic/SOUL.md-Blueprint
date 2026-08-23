@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import { readRepo,renderMarkdown,sourceUrl } from '../lib/content';
+const doc=renderMarkdown(readRepo('docs/EVALUATION.md')); const suite=JSON.parse(readRepo('evals/core/core-28.json')); const rubric=JSON.parse(readRepo('evals/rubrics/default.json'));
+---
+<Base title="Evaluation · SOUL.md Blueprint" description="Core-28 regression cases, repeated-run scoring, critical failure gates and behavioral conformance methodology.">
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Behavioral evidence</p><h1>Evaluation</h1><p class="hero-copy">A SOUL is judged by repeated behavior, worst-case failures and regression resistance—not how impressive its prose sounds.</p><div class="hero-buttons"><a class="button primary" href={sourceUrl('evals/core/core-28.json')}>Core-28 source ↗</a><a class="button" href="/evaluation.md">Markdown mirror ↓</a></div></div></section>
+<section class="shell" style="padding-bottom:60px"><div class="hero-meta"><div><strong>{suite.cases.length}</strong><span>Core cases</span></div><div><strong>{suite.cases.filter(c=>c.criticality==='critical').length}</strong><span>Critical gates</span></div><div><strong>{suite.cases.reduce((a,c)=>a+(c.repetitions||1),0)}</strong><span>Configured runs</span></div></div></section>
+<section class="doc-stage shell"><article class="prose"><div set:html={doc.html}/><h2>Core-28 machine suite</h2>{suite.cases.map(c=><details class="data-panel"><summary><strong>{c.id}</strong> · {c.criticality}</summary><p>{c.prompt}</p><p><strong>Must:</strong> {c.expected.must.join('; ')}</p><p><strong>Must not:</strong> {c.expected.must_not.join('; ') || '—'}</p><p><strong>Repetitions:</strong> {c.repetitions}</p></details>)}<h2>Rubric JSON</h2><div class="data-panel"><pre><code>{JSON.stringify(rubric,null,2)}</code></pre></div></article></section>
+</Base>

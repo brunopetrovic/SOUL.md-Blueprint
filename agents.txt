@@ -1,0 +1,13 @@
+# SOUL.md Blueprint agent discovery
+
+Canonical repository: https://github.com/brunopetrovic/SOUL.md-Blueprint
+Machine index: ./llms.txt
+AI ingestion procedure: ./AI-INGEST.md
+Operational skill: ./SKILL.md
+Machine schemas: ./spec/
+Runtime profiles: ./runtime-profiles/
+Regression suite: ./evals/core/core-28.json
+Website source: ./apps/website/
+Agent API source: ./apps/agent-api/
+
+The repository is safe to read as a knowledge standard. It does not grant tool permissions, financial authority, publishing authority, identity impersonation rights, or permission to mutate itself.

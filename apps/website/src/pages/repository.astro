@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro'; import {listRepoFiles,sourceUrl} from '../lib/content';
+const files=listRepoFiles().filter(f=>!f.startsWith('apps/website/dist/'));
+---
+<Base title="Repository Explorer · SOUL.md Blueprint" description="Browse every public source file in the canonical SOUL.md Blueprint repository." markdownPath={null}>
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Canonical source graph</p><h1>Repository</h1><p class="hero-copy">Every source file is reachable from this index. GitHub remains authoritative; the website is a versioned projection of the same repository.</p></div></section>
+<section class="shell" style="padding-bottom:120px"><div class="repo-list">{files.map(f=><div class="repo-file"><a href={sourceUrl(f)}>{f}</a><span>source ↗</span></div>)}</div></section>
+</Base>

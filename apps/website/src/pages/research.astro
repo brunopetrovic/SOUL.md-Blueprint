@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import { readRepo, renderMarkdown, sourceUrl } from '../lib/content';
+const docs=['docs/RESEARCH.md','docs/RESEARCH-2026-EXTENSIONS.md'];
+const parts=docs.map(rel=>({rel,...renderMarkdown(readRepo(rel))}));
+---
+<Base title="Research · SOUL.md Blueprint" description="Evidence base for persona prompting, sycophancy, character, representation, runtime identity and adjacent research mechanisms.">
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Evidence discipline</p><h1>Research</h1><p class="hero-copy">Empirical evidence is classified by mechanism so training-time character, runtime prompting, activation steering, personalization and representation analysis are not conflated.</p></div></section>
+<section class="doc-stage shell"><article class="prose">{parts.map(p=><section><p><a class="button" href={sourceUrl(p.rel)}>Source ↗</a></p><div set:html={p.html}/></section>)}</article></section>
+</Base>

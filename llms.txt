@@ -1,52 +1,50 @@
 # SOUL.md Blueprint
+
 > Runtime-neutral specification and engineering discipline for durable AI-agent identity.
 
-Canonical doctrine:
-- /MASTER-BLUEPRINT.md
+## Canonical doctrine
+- [Standard v1](./STANDARD-v1.md): Normative standard entrypoint.
+- [Master Blueprint](./MASTER-BLUEPRINT.md): Complete human-readable doctrine.
+- [AI Ingestion](./AI-INGEST.md): How an AI should consume and use this repository.
+- [SOUL Engineering Skill](./SKILL.md): Operational workflows for creation, audit, refactoring, compilation and evaluation.
 
-AI procedure:
-- /AI-INGEST.md
-- /SKILL.md
+## Architecture
+- [Foundations](./docs/FOUNDATIONS.md)
+- [Architecture](./docs/ARCHITECTURE.md)
+- [Engineering Method](./docs/ENGINEERING-METHOD.md)
+- [Authority Model](./docs/AUTHORITY-MODEL.md)
+- [Identity Lifecycle](./docs/IDENTITY-LIFECYCLE.md)
+- [Subagents & Delegation](./docs/SUBAGENTS-DELEGATION.md)
+- [Context Economics](./docs/CONTEXT-ECONOMICS.md)
+- [Agent-readable Web Architecture](./docs/AGENT-WEB-DISCOVERY.md)
 
-Architecture:
-- /docs/FOUNDATIONS.md
-- /docs/ARCHITECTURE.md
-- /docs/ENGINEERING-METHOD.md
-- /docs/AUTHORITY-MODEL.md
-- /docs/IDENTITY-LIFECYCLE.md
-- /docs/SUBAGENTS-DELEGATION.md
-- /docs/CONTEXT-ECONOMICS.md
+## Evaluation
+- [Evaluation doctrine](./docs/EVALUATION.md)
+- [Core-28 suite](./evals/core/core-28.json)
+- [Eval Case Schema](./spec/EVAL-CASE.schema.json)
+- [Eval Result Schema](./spec/EVAL-RESULT.schema.json)
 
-Evaluation:
-- /docs/EVALUATION.md
-- /evals/core/core-28.json
-- /spec/EVAL-CASE.schema.json
-- /spec/EVAL-RESULT.schema.json
+## Semantic specifications
+- [SOUL IR Schema](./spec/SOUL-IR.schema.json)
+- [SOUL Package Schema](./spec/SOUL-PACKAGE.schema.json)
+- [Runtime Capability Profile Schema](./spec/RUNTIME-CAPABILITY-PROFILE.schema.json)
 
-Semantic specs:
-- /spec/SOUL-IR.schema.json
-- /spec/SOUL-PACKAGE.schema.json
-- /spec/RUNTIME-CAPABILITY-PROFILE.schema.json
+## Runtime deployment
+- [Runtime Adapter Specification](./docs/RUNTIME-ADAPTER-SPEC.md)
+- [Runtime Compatibility](./docs/RUNTIME-COMPATIBILITY.md)
+- [Runtime Profiles](./runtime-profiles/README.md)
 
-Runtime deployment:
-- /docs/RUNTIME-ADAPTER-SPEC.md
-- /docs/RUNTIME-COMPATIBILITY.md
-- /docs/runtimes/
-- /runtime-profiles/
+## Research and provenance
+- [Research](./docs/RESEARCH.md)
+- [Research Extensions](./docs/RESEARCH-2026-EXTENSIONS.md)
+- [Sources](./SOURCES.md)
+- [Source Registry](./sources/registry.json)
 
-Research/provenance:
-- /docs/RESEARCH.md
-- /docs/RESEARCH-2026-EXTENSIONS.md
-- /SOURCES.md
-- /sources/registry.json
+## Reference implementation
+- [SOUL Lint](./tools/soul-lint/soul_lint.py)
+- [SOUL Eval](./tools/soul-eval/soul_eval.py)
+- [Website](./apps/website/README.md)
+- [Agent API](./apps/agent-api/README.md)
 
-Reference tooling:
-- /tools/soul-lint/
-- /tools/soul-eval/
-
-Case studies:
-- /case-studies/
-
-Specification:
-- /VERSION
-- /CHANGELOG.md
+## Case studies
+- [Case-study index](./case-studies/README.md)

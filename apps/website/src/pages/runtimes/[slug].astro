@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import { runtimeSlugs,titleize,loadRuntime,sourceUrl } from '../../lib/content';
+export function getStaticPaths(){return runtimeSlugs.map(slug=>({params:{slug}}));}
+const {slug}=Astro.params; const {rel,data}=loadRuntime(slug!);
+const jsonLd={'@context':'https://schema.org','@type':'TechArticle',name:`${titleize(slug!)} Runtime Profile`,description:'Dated runtime capability profile for SOUL deployment.',codeRepository:'https://github.com/brunopetrovic/SOUL.md-Blueprint',isPartOf:{'@type':'WebSite',name:'SOUL.md Blueprint'}};
+---
+<Base title={`${titleize(slug!)} Runtime Profile · SOUL.md Blueprint`} description={`Dated capability profile and SOUL transport mapping for ${titleize(slug!)}.`} jsonLd={jsonLd}>
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Runtime capability profile</p><h1>{titleize(slug!)}</h1><p class="hero-copy">Treat this as a dated snapshot, not eternal runtime truth. Reverify first-party docs before consequential deployment.</p><div class="hero-buttons"><a class="button primary" href={sourceUrl(rel)}>Profile source ↗</a><a class="button" href={`${Astro.url.pathname}.md`}>Markdown mirror ↓</a></div></div><div class="doc-signal-panel"><span class="panel-label">Machine-readable profile</span><code>{rel}</code><span class="status"><i class="status-dot"></i> DATED SNAPSHOT</span></div></section>
+<section class="shell" style="padding-bottom:120px"><div class="chip-row">{Object.entries(data).filter(([k,v])=>['string','number','boolean'].includes(typeof v)).slice(0,8).map(([k,v])=><span class="chip"><strong>{k}</strong>: {String(v)}</span>)}</div><div class="data-panel"><pre><code>{JSON.stringify(data,null,2)}</code></pre></div></section>
+</Base>

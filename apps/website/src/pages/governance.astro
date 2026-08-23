@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro'; import {readRepo,renderMarkdown,sourceUrl} from '../lib/content';
+const docs=['AGENTS.md','SECURITY.md','CONTRIBUTING.md','CHANGELOG.md','MIGRATIONS.md']; const items=docs.map(rel=>({rel,...renderMarkdown(readRepo(rel))}));
+---
+<Base title="Governance · SOUL.md Blueprint" description="Maintenance rules, security model, contribution standards, versioning and migration governance for the Blueprint itself.">
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Standard governance</p><h1>Governance</h1><p class="hero-copy">Identity engineering only stays trustworthy if the standard itself has source authority, review discipline, change control and explicit security boundaries.</p></div></section>
+<section class="doc-stage shell"><article class="prose">{items.map(i=><section><p><a class="button" href={sourceUrl(i.rel)}>{i.rel} ↗</a></p><div set:html={i.html}/></section>)}</article></section>
+</Base>

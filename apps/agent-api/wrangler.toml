@@ -1,0 +1,8 @@
+name = "soul-blueprint-agent-api"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+
+[vars]
+SITE_ORIGIN = "https://soul-md-blueprint.pages.dev"
+CANONICAL_REPO = "https://github.com/brunopetrovic/SOUL.md-Blueprint"
+ALLOWED_ORIGINS = "https://soul-md-blueprint.pages.dev"

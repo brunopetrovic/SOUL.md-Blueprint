@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro'; import {readRepo,sourceUrl} from '../lib/content';
+const tools=[['SOUL Lint','tools/soul-lint/soul_lint.py'],['SOUL Eval','tools/soul-eval/soul_eval.py']].map(([name,rel])=>({name,rel,source:readRepo(rel)}));
+---
+<Base title="Tooling · SOUL.md Blueprint" description="Reference linting and evaluation implementations for SOUL quality control and behavioral evidence aggregation.">
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Reference implementation</p><h1>Tooling</h1><p class="hero-copy">The tools are reference implementations: useful automation, not security proofs or substitutes for domain judgment.</p></div></section>
+<section class="shell" style="padding-bottom:120px">{tools.map(t=><details class="data-panel" open><summary><strong>{t.name}</strong></summary><p><a class="button" href={sourceUrl(t.rel)}>View source ↗</a></p><pre><code>{t.source}</code></pre></details>)}</section>
+</Base>

@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import { runtimeSlugs,titleize,loadRuntime,sourceUrl } from '../../lib/content';
+const items=runtimeSlugs.map(slug=>({slug,...loadRuntime(slug)}));
+---
+<Base title="Runtime Adapters · SOUL.md Blueprint" description="Machine-readable capability profiles and transport mappings for eight major agent runtimes." markdownPath="/runtimes.md">
+<section class="doc-hero shell compact-hero"><div><p class="eyebrow">Runtime compilation</p><h1>Runtime adapters</h1><p class="hero-copy">SOUL is a semantic standard, not a universal filename convention. Each profile records the native surfaces, capability limits and known losses of a deployment target.</p></div></section>
+<section class="section shell"><div class="card-grid">{items.map((item,i)=><a class="card" href={`/runtimes/${item.slug}`}><span class="cap-number">{String(i+1).padStart(2,'0')} / PROFILE</span><h3>{titleize(item.slug)}</h3><p>{item.data.summary || item.data.description || 'Runtime capability snapshot and semantic mapping.'}</p></a>)}</div></section>
+</Base>

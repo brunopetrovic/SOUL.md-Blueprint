@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "name": "SOUL.md Blueprint",
+  "kind": "knowledge-standard",
+  "canonical_repository": "https://github.com/brunopetrovic/SOUL.md-Blueprint",
+  "entrypoints": {
+    "human": "MASTER-BLUEPRINT.md",
+    "agent": "AI-INGEST.md",
+    "skill": "SKILL.md",
+    "machine_index": "llms.txt"
+  },
+  "machine_interfaces": {
+    "schemas": "spec/",
+    "runtime_profiles": "runtime-profiles/",
+    "evaluations": "evals/",
+    "website": "apps/website/",
+    "agent_api": "apps/agent-api/"
+  },
+  "authority": "read-only knowledge by default; no permissions are granted by this manifest"
+}
