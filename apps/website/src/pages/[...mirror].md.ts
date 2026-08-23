@@ -1,13 +1,23 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { publicRoutes,pageMarkdown,readRepo,runtimeSlugs,caseStudySlugs,titleize } from '../lib/content';
+import { publicRoutes, pageMarkdown, prepareMarkdownRepresentation } from '../lib/content';
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = publicRoutes().filter(p => p !== '/' && !['/runtimes','/case-studies','/repository'].includes(p));
-  return [
-    { params:{mirror:'index'}, props:{content: readRepo('README.md')} },
-    { params:{mirror:'runtimes'}, props:{content:'# Runtime profiles\n\n'+runtimeSlugs.map(s=>`- [${titleize(s)}](/runtimes/${s}.md)`).join('\n')} },
-    { params:{mirror:'case-studies'}, props:{content:'# Case studies\n\n'+caseStudySlugs.map(s=>`- [${titleize(s)}](/case-studies/${s}.md)`).join('\n')} },
-    ...paths.map(p=>({params:{mirror:p.slice(1)},props:{content:pageMarkdown(p)}}))
-  ];
+export const getStaticPaths: GetStaticPaths = async () => publicRoutes().map(pathname => ({
+  params: { mirror: pathname === '/' ? 'index' : pathname.slice(1) },
+  props: { pathname, content: pageMarkdown(pathname) }
+}));
+
+export const GET: APIRoute = ({ props, site }) => {
+  const base = (site || new URL('https://soul-md-blueprint.pages.dev')).toString().replace(/\/$/, '');
+  const pathname = String(props.pathname || '/');
+  const canonical = new URL(pathname === '/' ? '/' : pathname, `${base}/`).toString();
+  const content = prepareMarkdownRepresentation(pathname, String(props.content || ''), `${base}/`);
+  return new Response(content, {
+    headers: {
+      'Content-Type': 'text/markdown; charset=utf-8',
+      'Cache-Control': 'public, max-age=300',
+      'Vary': 'Accept',
+      'Content-Location': `${pathname === '/' ? '/index' : pathname}.md`,
+      'Link': `<${canonical}>; rel="canonical", <${base}/llms.txt>; rel="describedby", <${base}/openapi.json>; rel="service-desc"; type="application/vnd.oai.openapi+json"`
+    }
+  });
 };
-export const GET: APIRoute = ({props}) => new Response(props.content,{headers:{'Content-Type':'text/markdown; charset=utf-8','Cache-Control':'public, max-age=300'}});
