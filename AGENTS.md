@@ -1,5 +1,7 @@
 # AGENTS.md — SOUL.md Blueprint Repository
 
+> Repository-wide operating instructions for coding agents working on the SOUL.md Blueprint, its static documentation website, reference tooling, runtime profiles, examples, and agent interfaces.
+
 ## Mission
 
 Maintain this repository as a high-integrity, runtime-agnostic, practitioner-grade knowledge base for SOUL engineering.
@@ -18,6 +20,86 @@ Changes should increase one or more of:
 - compression.
 
 Do not increase length merely to create the appearance of sophistication.
+
+## Scope and precedence
+
+- This root file applies repository-wide unless a deeper `AGENTS.md` explicitly narrows or replaces a rule for its subtree.
+- User instructions for the current task outrank repository workflow preferences unless they conflict with platform/runtime policy or explicit safety constraints.
+- Canonical doctrine belongs in the documented semantic/source layer; do not silently encode product-specific behavior into supposedly runtime-neutral files.
+
+## Installation
+
+The repository has two Node-based applications and Python reference tooling. Install app dependencies in their own directories.
+
+### Website
+
+```bash
+cd apps/website
+npm install --no-audit --no-fund
+```
+
+### Agent API
+
+```bash
+cd apps/agent-api
+npm install --no-audit --no-fund
+```
+
+Python tooling under `tools/` is intentionally dependency-light; use Python 3.12+ unless a tool states otherwise.
+
+## Configuration
+
+The static website uses `PUBLIC_SITE_URL` to generate canonical absolute URLs in `llms.txt`, OpenAPI, JSON-LD, sitemaps, and discovery manifests.
+
+```bash
+cd apps/website
+export PUBLIC_SITE_URL=https://example.invalid
+```
+
+For Cloudflare Pages production builds, configure the actual canonical origin instead of `example.invalid`.
+
+The agent API uses Wrangler configuration in `apps/agent-api/wrangler.toml`. Never commit secrets. Name required environment variables in documentation, but keep values in the deployment platform's secret store.
+
+## Usage
+
+### Website development and verification
+
+```bash
+cd apps/website
+npm run dev
+npm run check
+npm run build
+npm run preview
+```
+
+The production build must remain prerendered/static for core documentation. Client JavaScript may progressively enhance search, theme, navigation, and visuals, but substantive content and machine metadata must exist without executing JavaScript.
+
+### Agent API development and verification
+
+```bash
+cd apps/agent-api
+npm run check
+npm run dev
+```
+
+Deploy only with explicit authorization:
+
+```bash
+cd apps/agent-api
+npm run deploy
+```
+
+Do not advertise MCP or A2A endpoints as live until the deployed URL has been verified.
+
+## Generated and sensitive paths
+
+Do not hand-edit generated build artifacts:
+
+- `apps/website/dist/`
+- `node_modules/`
+- `.astro/`
+
+Do not commit credentials, deployment tokens, API keys, cookies, private user data, or secrets to any path.
 
 ## Core Portability Law
 
@@ -77,29 +159,53 @@ For material changes:
 
 1. Identify the claim or behavior being improved.
 2. Inspect the relevant existing section.
-3. Determine whether the change is doctrine, runtime adapter, runtime reference, research evidence, template, specification, or example.
+3. Determine whether the change is doctrine, runtime adapter, runtime reference, research evidence, template, specification, example, website representation, or protocol surface.
 4. Use the smallest coherent edit when that preserves architecture.
 5. Preserve useful existing material.
 6. Remove contradictions and duplicated guidance.
 7. Add/update sources where factual claims changed.
 8. Check cross-file consistency.
 9. Update tests/templates/specification if doctrine changes expected behavior.
-10. Verify the resulting repository state after writes.
+10. Build/type-check affected applications.
+11. Verify the resulting repository state after writes.
 
 ## Repository Architecture
 
 - `MASTER-BLUEPRINT.md` — canonical single-file doctrine.
 - `AI-INGEST.md` — how another AI should consume and apply the repository.
 - `docs/` — deep modular references.
+- `docs/GLOSSARY.md` — canonical terminology for humans and agents.
 - `docs/RUNTIME-ADAPTER-SPEC.md` — canonical runtime-neutral transport specification.
 - `docs/RUNTIME-COMPATIBILITY.md` — compatibility taxonomy and matrix.
 - `docs/runtimes/` — dated runtime adapters.
+- `runtime-profiles/` — machine-readable runtime capability profiles.
 - `spec/` — machine-readable portability specifications.
 - `templates/` — reusable engineering artifacts.
-- `examples/` — applied patterns, labeled as examples rather than universal doctrine.
+- `case-studies/` — applied SOUL + AGENTS pairs.
+- `evals/` — behavioral regression suites.
+- `tools/` — reference lint/eval tooling.
+- `apps/website/` — static agent-readable web projection.
+- `apps/agent-api/` — optional MCP/A2A reference service.
 - `SOURCES.md` — provenance and evidence register.
 
 Do not duplicate the full master in every modular document. Modular docs may expand individual topics.
+
+## Agent-readability web contract
+
+The website is a machine interface as well as a human documentation surface.
+
+For public documentation pages:
+
+- keep substantive content prerendered;
+- emit canonical URL, language, description, Open Graph metadata, JSON-LD, `rel="describedby"` to `/llms.txt`, and an OpenAPI service-description link;
+- provide a `.md` representation with YAML frontmatter and an agent-navigation sitemap section;
+- keep Markdown and HTML semantically equivalent;
+- support `Accept: text/markdown` at the Cloudflare edge with `Vary: Accept`;
+- expose `/llms.txt`, `/llms-full.txt`, `/sitemap.xml`, `/sitemap.md`, `/AGENTS.md`, `/glossary`, `/openapi.json`, and the documented discovery manifests;
+- keep `sitemap.xml` freshness metadata stable across rebuilds unless the represented source actually changes;
+- never occupy a standardized well-known path with a custom incompatible schema.
+
+Protocol surfaces must be truthful. Publish MCP/A2A/payment/commerce manifests only when the corresponding capability is actually deployed and verified.
 
 ## Runtime Adapter Governance
 
@@ -269,5 +375,7 @@ A change is done when:
 - no obvious contradiction was introduced;
 - templates/tests/specifications are updated if necessary;
 - adapter losses are disclosed;
+- affected app builds/type-checks pass;
+- agent-readable discovery and representation contracts remain valid;
 - effective repository structure is verified;
 - the result is simpler or more powerful, not merely longer.
