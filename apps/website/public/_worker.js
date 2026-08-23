@@ -36,30 +36,69 @@ function mergeVary(current, token) {
   return values.join(', ');
 }
 
-function decorate(response, { origin, canonicalPath, markdownPath, isMarkdown }) {
-  const headers = new Headers(response.headers);
-  headers.set('Vary', mergeVary(headers.get('Vary'), 'Accept'));
-
+function discoveryLinks(origin, canonicalPath, markdownPath, includeAlternate) {
   const links = [
     `<${origin}${canonicalPath}>; rel="canonical"`,
     `<${origin}/llms.txt>; rel="describedby"`,
-    `<${origin}/openapi.json>; rel="service-desc"; type="application/vnd.oai.openapi+json"`
+    `<${origin}/openapi.json>; rel="service-desc"; type="application/openapi+json;version=3.1"`,
+    `<${origin}/.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json"`,
+    `<${origin}/.well-known/agent-skills/index.json>; rel="agent-skills"; type="application/json"`
   ];
-  if (!isMarkdown && markdownPath) {
+  if (includeAlternate && markdownPath) {
     links.splice(1, 0, `<${origin}${markdownPath}>; rel="alternate"; type="text/markdown"`);
   }
-  headers.set('Link', links.join(', '));
+  return links.join(', ');
+}
 
-  if (isMarkdown) {
-    headers.set('Content-Type', 'text/markdown; charset=utf-8');
-    if (markdownPath) headers.set('Content-Location', markdownPath);
-  }
-
+function cloneResponse(response, headers) {
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
     headers
   });
+}
+
+function decorateDocument(response, { origin, canonicalPath, markdownPath, isMarkdown }) {
+  const headers = new Headers(response.headers);
+  headers.set('Vary', mergeVary(headers.get('Vary'), 'Accept'));
+  headers.set('Link', discoveryLinks(origin, canonicalPath, markdownPath, !isMarkdown));
+  if (isMarkdown) {
+    headers.set('Content-Type', 'text/markdown; charset=utf-8');
+    if (markdownPath) headers.set('Content-Location', markdownPath);
+  }
+  return cloneResponse(response, headers);
+}
+
+function decorateMachine(response, pathname, origin) {
+  const headers = new Headers(response.headers);
+  headers.set('Access-Control-Allow-Origin', '*');
+
+  if (pathname === '/.well-known/api-catalog') {
+    headers.set('Content-Type', 'application/linkset+json;profile="https://www.rfc-editor.org/info/rfc9727"');
+    headers.set('Link', `<${origin}/.well-known/api-catalog>; rel="canonical", <${origin}/openapi.json>; rel="service-desc"; type="application/openapi+json;version=3.1"`);
+  } else if (pathname === '/.well-known/agent-skills/index.json') {
+    headers.set('Content-Type', 'application/json; charset=utf-8');
+    headers.set('Link', `<${origin}/.well-known/agent-skills/index.json>; rel="canonical", <${origin}/llms.txt>; rel="describedby"`);
+  } else if (pathname.startsWith('/.well-known/agent-skills/') && pathname.endsWith('/SKILL.md')) {
+    headers.set('Content-Type', 'text/markdown; charset=utf-8');
+    headers.set('Link', `<${origin}${pathname}>; rel="canonical", <${origin}/.well-known/agent-skills/index.json>; rel="collection", <${origin}/llms.txt>; rel="describedby"`);
+  } else if (pathname === '/openapi.json') {
+    headers.set('Content-Type', 'application/openapi+json;version=3.1; charset=utf-8');
+    headers.set('Link', `<${origin}/openapi.json>; rel="canonical", <${origin}/.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json", <${origin}/llms.txt>; rel="describedby"`);
+  } else if (pathname === '/agents.json' || pathname === '/.well-known/agent-permissions.json' || pathname.startsWith('/api/')) {
+    headers.set('Content-Type', 'application/json; charset=utf-8');
+  }
+
+  return cloneResponse(response, headers);
+}
+
+function isMachineEndpoint(pathname) {
+  return pathname === '/.well-known/api-catalog' ||
+    pathname.startsWith('/.well-known/agent-skills/') ||
+    pathname === '/.well-known/agent-permissions.json' ||
+    pathname === '/openapi.json' ||
+    pathname === '/agents.json' ||
+    pathname.startsWith('/api/');
 }
 
 export default {
@@ -77,7 +116,7 @@ export default {
       });
       const markdownResponse = await env.ASSETS.fetch(markdownRequest);
       if (markdownResponse.ok) {
-        return decorate(markdownResponse, {
+        return decorateDocument(markdownResponse, {
           origin: url.origin,
           canonicalPath: url.pathname === '/' ? '/' : url.pathname.replace(/\/$/, ''),
           markdownPath,
@@ -88,8 +127,12 @@ export default {
 
     const response = await env.ASSETS.fetch(request);
 
+    if ((method === 'GET' || method === 'HEAD') && isMachineEndpoint(url.pathname)) {
+      return decorateMachine(response, url.pathname, url.origin);
+    }
+
     if ((method === 'GET' || method === 'HEAD') && (url.pathname.endsWith('.md') || SPECIAL_MARKDOWN_RESOURCES.has(url.pathname))) {
-      return decorate(response, {
+      return decorateDocument(response, {
         origin: url.origin,
         canonicalPath: canonicalPathForMarkdown(url.pathname),
         markdownPath: url.pathname,
@@ -99,7 +142,7 @@ export default {
 
     if ((method === 'GET' || method === 'HEAD') && isDocumentPath(url.pathname)) {
       const canonicalPath = url.pathname === '/' ? '/' : url.pathname.replace(/\/$/, '');
-      return decorate(response, {
+      return decorateDocument(response, {
         origin: url.origin,
         canonicalPath,
         markdownPath: markdownPathFor(canonicalPath),
