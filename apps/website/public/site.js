@@ -68,7 +68,7 @@
 
   document.querySelectorAll('pre').forEach(pre => {
     const btn = document.createElement('button'); btn.type='button'; btn.className='copy-code'; btn.textContent='COPY';
-    btn.addEventListener('click', async () => { await navigator.clipboard.writeText(pre.textContent || ''); btn.textContent='COPIED'; setTimeout(()=>btn.textContent='COPY',1200); });
+    btn.addEventListener('click', async () => { const code = pre.querySelector('code'); await navigator.clipboard.writeText(code?.textContent || pre.childNodes[0]?.textContent || ''); btn.textContent='COPIED'; setTimeout(()=>btn.textContent='COPY',1200); });
     pre.appendChild(btn);
   });
 
