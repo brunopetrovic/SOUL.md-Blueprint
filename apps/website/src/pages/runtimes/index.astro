@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { runtimeSlugs,titleize,loadRuntime,sourceUrl } from '../../lib/content';
+import { runtimeSlugs,titleize,loadRuntime } from '../../lib/content';
 const items=runtimeSlugs.map(slug=>({slug,...loadRuntime(slug)}));
 ---
 <Base title="Runtime Adapters · SOUL.md Blueprint" description="Machine-readable capability profiles and transport mappings for eight major agent runtimes." markdownPath="/runtimes.md">

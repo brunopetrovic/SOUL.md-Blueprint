@@ -4,6 +4,34 @@ All notable changes to the SOUL.md Blueprint specification are recorded here.
 
 The project follows Semantic Versioning for the **Blueprint specification**, not for third-party runtimes.
 
+## [1.2.0] — 2026-08-23
+
+### Added
+- Public `/AGENTS.md` web representation backed by the canonical repository operational contract.
+- Canonical glossary and machine-readable `/sitemap.md` surface.
+- Markdown representations for public documentation routes with frontmatter, canonical/source provenance, stable freshness metadata, sitemap context, and language-tagged opening fences.
+- `Accept: text/markdown` content negotiation through the Cloudflare Pages advanced-mode `_worker.js`, including `Vary: Accept`, `Content-Location`, canonical/alternate links, OpenAPI discovery, API Catalog discovery, and Agent Skills discovery.
+- Read-only website API endpoints for catalog, runtime profiles, and case studies.
+- OpenAPI 3.1 contract at `/openapi.json` linked to the website read-only API.
+- Wildcard `agents.json` discovery manifest tied to real OpenAPI operation IDs.
+- LAS-WG-shaped `/.well-known/agent-permissions.json` policy that remains explicitly advisory rather than a grant of authority.
+- RFC 9727 API Catalog at `/.well-known/api-catalog`.
+- Agent Skills Discovery index and digest-backed `SOUL Engineering` skill artifact under `/.well-known/agent-skills/`.
+- Cloudflare Pages deployment workflow and handoff documentation for authenticated Wrangler deployment.
+- Expanded CI conformance assertions covering agent-readable representations, discovery manifests, OpenAPI linkage, permissions, API catalog, Agent Skills digest integrity, and Markdown negotiation behavior.
+
+### Changed
+- Blueprint project version advanced to 1.2.0.
+- `llms.txt`, `llms-full.txt`, `agents.txt`, robots discovery, footer discovery, and repository representation now expose the broader machine interface set.
+- `sitemap.xml` freshness semantics no longer stamp every URL with the build date.
+- `SKILL.md` now carries Agent Skills-compatible frontmatter while preserving its canonical engineering procedure.
+- Cloudflare deployment guidance now distinguishes source readiness, Pages project/account setup, GitHub secret configuration, and actual production deployment.
+
+### Security
+- Agent-facing permission manifests remain descriptive/advisory and do not replace Cloudflare, runtime, tool, or account authorization controls.
+- The public website API remains read-only and exposes no credential, publishing, financial, destructive, or account-management operations.
+- Deployment credentials are expected only through GitHub Actions secrets or an authenticated Cloudflare/Wrangler session; no Cloudflare credential is committed to the repository.
+
 ## [1.1.0] — 2026-08-23
 
 ### Added

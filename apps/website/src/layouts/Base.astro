@@ -46,7 +46,7 @@ const schema = jsonLd || {
   {mdAlt && <link rel="alternate" type="text/markdown" href={mdAlt} />}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>{title}</title>
-  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -96,6 +96,6 @@ const schema = jsonLd || {
     </div>
   </div>
 
-  <script src="/site.js" defer></script>
+  <script is:inline src="/site.js" defer></script>
 </body>
 </html>

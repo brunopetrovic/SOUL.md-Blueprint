@@ -65,7 +65,7 @@ jobs:
 
       - name: Website install
         working-directory: apps/website
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Website typecheck
         working-directory: apps/website
@@ -79,7 +79,7 @@ jobs:
 
       - name: Agent API install
         working-directory: apps/agent-api
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Agent API typecheck
         working-directory: apps/agent-api
