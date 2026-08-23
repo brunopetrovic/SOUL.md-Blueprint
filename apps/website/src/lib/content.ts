@@ -15,9 +15,9 @@ export const runtimeSlugs = [
 
 export const caseStudySlugs = [
   'account-manager','blockchain','co-founder','cybersecurity','designer','developer',
-  'finance-accounting','freelance-worker','gamer','health-fitness','job-hunter','marketer',
-  'music-audio','mystic','partnerships-funding','psychologist','relationship-advisor',
-  'researcher','sales','social-media-manager','trader-investor','weekly-intelligence'
+  'finance-accounting','freelance-worker','gamer','health-fitness','job-hunter','marketer-distributor',
+  'music-audio','mystic','partnerships-funding','psychological-clarity','relationship-advisor',
+  'researcher','sales-operator','social-media-manager','trader-investor','weekly-intelligence'
 ] as const;
 
 export const routeSources: Record<string,string> = {
@@ -153,7 +153,7 @@ export function listRepoFiles(dir = ROOT, prefix = ''): string[] {
 }
 
 export function repoVersion() {
-  try { return readRepo('VERSION').trim(); } catch { return '1.1.0'; }
+  try { return readRepo('VERSION').trim(); } catch { return '1.2.0'; }
 }
 
 export function loadRuntime(slug: string) {
